@@ -2,7 +2,9 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class ExpensesBottomSheet extends StatefulWidget {
-  const ExpensesBottomSheet({super.key});
+  const ExpensesBottomSheet({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<ExpensesBottomSheet> createState() {
@@ -36,7 +38,6 @@ class _ExpensesBottomSheet extends State<ExpensesBottomSheet> {
     setState(() {
       _selectedDate = pickedDate;
     });
-    print(pickedDate);
   }
 
   void _submitExpenseData() {
@@ -45,14 +46,39 @@ class _ExpensesBottomSheet extends State<ExpensesBottomSheet> {
     if (_titleController.text.trim().isEmpty ||
         amountIsInvaild ||
         _selectedDate == null) {
-      // show message error
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Invaild input"),
+          content: const Text(
+              "Please make sure a valid title amount, date and category was entered."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text("Okay"),
+            ),
+          ],
+        ),
+      );
+      return;
     }
+    widget.onAddExpense(
+      Expense(
+        title: _titleController.text,
+        amount: enteredAmount,
+        date: _selectedDate!,
+        category: _selectedCategory,
+      ),
+    );
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           TextField(
@@ -127,8 +153,7 @@ class _ExpensesBottomSheet extends State<ExpensesBottomSheet> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  print(_titleController.text);
-                  // print(titleInput);
+                  _submitExpenseData();
                 },
                 child: const Text("Save Expense"),
               ),
