@@ -14,12 +14,22 @@ class ExpensesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("horizontal : ${Theme.of(context).cardTheme.margin!.horizontal}");
+    print("vertical : ${Theme.of(context).cardTheme.margin!.vertical}");
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) =>
           // Dismissible: widget that have ปัดขวาเพื่อลบ
-          Dismissible(
+      Dismissible(
         key: ValueKey(expenses[index]),
+        background: Container(
+          color: Theme.of(context).colorScheme.error.withValues(alpha: 0.75),
+        // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: EdgeInsets.symmetric(
+            horizontal: Theme.of(context).cardTheme.margin!.horizontal/2,
+            vertical: Theme.of(context).cardTheme.margin!.vertical/2,
+          ),
+        ),
         onDismissed: (directionItem) {
           // onDismissed: manage index that u clear
           onRemoveExpense(expenses[index]);
