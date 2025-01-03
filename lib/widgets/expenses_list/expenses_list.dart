@@ -14,8 +14,6 @@ class ExpensesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("horizontal : ${Theme.of(context).cardTheme.margin!.horizontal}");
-    print("vertical : ${Theme.of(context).cardTheme.margin!.vertical}");
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) =>
@@ -41,3 +39,13 @@ class ExpensesList extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+    // print("horizontal : ${Theme.of(context).cardTheme.margin!.horizontal}");
+    // print("vertical : ${Theme.of(context).cardTheme.margin!.vertical}");

@@ -37,13 +37,19 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true, // FullScreen: BottomSheetModel
       context: context,
+      constraints: BoxConstraints(
+        minWidth: 0,
+        maxWidth: MediaQuery.of(context).size.width,
+        ),
       builder: (ctx) => ExpensesBottomSheet(
         onAddExpense: _addExpense,
       ),
     );
   }
+
 
   void _addExpense(Expense expense) {
     setState(() {
@@ -80,7 +86,11 @@ class _ExpensesState extends State<Expenses> {
   }
 
   @override
-  Widget build(Object context) {
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    // final height = MediaQuery.of(context).size.height;
+    // print("width : $width");
+    // print("height : $height");
     Widget mainContent = const Center(
       child: Text("No expenses found. Start adding some !"),
     );
@@ -97,6 +107,7 @@ class _ExpensesState extends State<Expenses> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text("Flutter Expense Tracker"),
         actions: [
           IconButton(
@@ -105,13 +116,44 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registerExpenses),
-          Text("The chart"),
-          Expanded(child: mainContent),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(
+                  expenses: _registerExpenses,
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(
+                    expenses: _registerExpenses,
+                  ),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
+
+
+// Note: 
+/// Col(^) -> height not limit more *^ 
+///        -> width equal parent(Scaffold)
+/// 
+/// Row(>) -> height equal parent(Scaffold)
+///        -> width not limit more *>
+///
+/// incase use: double.infinity set on width then row boom -> fix by expanded
+///
+///
+///
+///
+///
